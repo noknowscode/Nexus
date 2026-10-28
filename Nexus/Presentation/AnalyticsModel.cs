@@ -2,12 +2,20 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
+using Nexus.Services;
 using SkiaSharp;
+using Uno.Extensions.Reactive;
 
 namespace Nexus.Presentation;
 
-public partial record AnalyticsModel
+public partial record AnalyticsModel(INexusService Nexus)
 {
+    // OEE / MTBF / MTTR / FPY headline metrics from the service.
+    public IFeed<AnalyticsMetrics> Metrics => Feed.Async(Nexus.GetAnalyticsMetricsAsync);
+
+    // Per-line rows for the comparison matrix.
+    public IListFeed<ProductionLine> Lines => ListFeed.Async(Nexus.GetProductionLinesAsync);
+
     private static readonly SKColor SuccessColor = SKColor.Parse("#4ade80");
     private static readonly SKColor InfoColor = SKColor.Parse("#60a5fa");
     private static readonly SKColor DangerColor = SKColor.Parse("#f87171");

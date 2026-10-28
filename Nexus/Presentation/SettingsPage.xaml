@@ -1,7 +1,16 @@
 <Page x:Class="Nexus.Presentation.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mvux="using:Uno.Extensions.Reactive.UI"
+      xmlns:conv="using:Nexus.Converters"
+      xmlns:models="using:Nexus.Models"
       Background="{ThemeResource NexusBackgroundPrimaryBrush}">
+
+    <Page.Resources>
+        <conv:DateConverter x:Key="Date"/>
+        <conv:EnumUpperConverter x:Key="Upper"/>
+        <conv:UserStatusBrushConverter x:Key="UserStatusBrush"/>
+    </Page.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid Padding="24" MinWidth="800">
@@ -18,111 +27,91 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- SYSTEM PREFERENCES Panel -->
+                <!-- SYSTEM PREFERENCES Panel (toggles driven by the settings feed) -->
                 <Border Grid.Column="0" Style="{ThemeResource NexusPanelBorderStyle}" Padding="20">
                     <StackPanel Spacing="12">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Ellipse Width="6" Height="6" Fill="{ThemeResource NexusInfoBrush}" VerticalAlignment="Center"/>
-                            <TextBlock Text="SYSTEM PREFERENCES" Style="{ThemeResource NexusPanelTitleStyle}"/>
+                            <TextBlock x:Uid="Pages_Settings_SystemPreferences" Text="SYSTEM PREFERENCES" Style="{ThemeResource NexusPanelTitleStyle}"/>
                         </StackPanel>
 
-                        <StackPanel Spacing="0">
-                            <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Text="Automatic Backup" Style="{ThemeResource NexusBodyStyle}"/>
-                                        <TextBlock Text="Schedule daily backups of system data" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                        <mvux:FeedView Source="{Binding Settings}">
+                            <mvux:FeedView.ValueTemplate>
+                                <DataTemplate>
+                                    <StackPanel Spacing="0">
+                                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Automatic Backup" Style="{ThemeResource NexusBodyStyle}"/>
+                                                    <TextBlock Text="Schedule daily backups of system data" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <ToggleSwitch Grid.Column="1" IsOn="{Binding Data.AutoBackup}" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Email Alerts" Style="{ThemeResource NexusBodyStyle}"/>
+                                                    <TextBlock Text="Receive critical alerts via email" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <ToggleSwitch Grid.Column="1" IsOn="{Binding Data.EmailAlerts}" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Sound Alerts" Style="{ThemeResource NexusBodyStyle}"/>
+                                                    <TextBlock Text="Play audio for system warnings" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <ToggleSwitch Grid.Column="1" IsOn="{Binding Data.SoundAlerts}" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Data Retention Period" Style="{ThemeResource NexusBodyStyle}"/>
+                                                    <TextBlock Text="How long to keep historical data" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Text="{Binding Data.DataRetention}" Style="{ThemeResource NexusBodyMonoStyle}" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Temperature Unit" Style="{ThemeResource NexusBodyStyle}"/>
+                                                    <TextBlock Text="Display in Celsius or Fahrenheit" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Text="{Binding Data.TemperatureUnit}" Style="{ThemeResource NexusBodyMonoStyle}" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Dashboard Refresh Rate" Style="{ThemeResource NexusBodyStyle}"/>
+                                                    <TextBlock Text="How often to update real-time data" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Style="{ThemeResource NexusBodyMonoStyle}" VerticalAlignment="Center">
+                                                    <Run Text="{Binding Data.RefreshRate}"/><Run Text="s"/>
+                                                </TextBlock>
+                                            </Grid>
+                                        </Border>
                                     </StackPanel>
-                                    <ToggleSwitch Grid.Column="1" IsOn="True" VerticalAlignment="Center"/>
-                                </Grid>
-                            </Border>
-                            <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Text="Email Alerts" Style="{ThemeResource NexusBodyStyle}"/>
-                                        <TextBlock Text="Receive critical alerts via email" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                    <ToggleSwitch Grid.Column="1" IsOn="True" VerticalAlignment="Center"/>
-                                </Grid>
-                            </Border>
-                            <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Text="Sound Alerts" Style="{ThemeResource NexusBodyStyle}"/>
-                                        <TextBlock Text="Play audio for system warnings" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                    <ToggleSwitch Grid.Column="1" IsOn="False" VerticalAlignment="Center"/>
-                                </Grid>
-                            </Border>
-                            <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Text="Data Retention Period" Style="{ThemeResource NexusBodyStyle}"/>
-                                        <TextBlock Text="How long to keep historical data" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                    <ComboBox Grid.Column="1" Style="{ThemeResource NexusComboBoxStyle}" MinWidth="100" MaxWidth="140" VerticalAlignment="Center">
-                                        <ComboBoxItem Content="30 days"/>
-                                        <ComboBoxItem Content="90 days" IsSelected="True"/>
-                                        <ComboBoxItem Content="180 days"/>
-                                        <ComboBoxItem Content="1 year"/>
-                                    </ComboBox>
-                                </Grid>
-                            </Border>
-                            <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Text="Temperature Unit" Style="{ThemeResource NexusBodyStyle}"/>
-                                        <TextBlock Text="Display in Celsius or Fahrenheit" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                    <ComboBox Grid.Column="1" Style="{ThemeResource NexusComboBoxStyle}" MinWidth="100" MaxWidth="140" VerticalAlignment="Center">
-                                        <ComboBoxItem Content="Celsius" IsSelected="True"/>
-                                        <ComboBoxItem Content="Fahrenheit"/>
-                                    </ComboBox>
-                                </Grid>
-                            </Border>
-                            <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,16">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Text="Dashboard Refresh Rate" Style="{ThemeResource NexusBodyStyle}"/>
-                                        <TextBlock Text="How often to update real-time data" Style="{ThemeResource NexusCaptionStyle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                    <ComboBox Grid.Column="1" Style="{ThemeResource NexusComboBoxStyle}" MinWidth="100" MaxWidth="140" VerticalAlignment="Center">
-                                        <ComboBoxItem Content="1 second"/>
-                                        <ComboBoxItem Content="5 seconds" IsSelected="True"/>
-                                        <ComboBoxItem Content="10 seconds"/>
-                                        <ComboBoxItem Content="30 seconds"/>
-                                    </ComboBox>
-                                </Grid>
-                            </Border>
-                        </StackPanel>
+                                </DataTemplate>
+                            </mvux:FeedView.ValueTemplate>
+                            <mvux:FeedView.ProgressTemplate>
+                                <DataTemplate><ProgressRing IsActive="True" Width="24" Height="24" Margin="0,24" HorizontalAlignment="Center"/></DataTemplate>
+                            </mvux:FeedView.ProgressTemplate>
+                        </mvux:FeedView>
                     </StackPanel>
                 </Border>
 
-                <!-- NETWORK CONFIGURATION Panel -->
+                <!-- NETWORK CONFIGURATION Panel (static device config) -->
                 <Border Grid.Column="2" Style="{ThemeResource NexusPanelBorderStyle}" Padding="20">
                     <StackPanel Spacing="12">
                         <Grid>
@@ -192,7 +181,7 @@
                 </Border>
             </Grid>
 
-            <!-- Bottom Row: User Management -->
+            <!-- Bottom Row: User Management (data-driven) -->
             <Border Grid.Row="1" Style="{ThemeResource NexusPanelBorderStyle}" Padding="20">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -214,7 +203,6 @@
                     </Grid>
 
                     <StackPanel Grid.Row="1" Margin="0,16,0,0" Spacing="0">
-                        <!-- Table Header -->
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" MinWidth="55"/>
@@ -234,140 +222,52 @@
                             <TextBlock Grid.Column="6" Text="ACTION" Style="{ThemeResource NexusTableHeaderStyle}"/>
                         </Grid>
 
-                        <!-- User 1 -->
-                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" MinWidth="55"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="130"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="85"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="100"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="70"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="60"/>
-                                </Grid.ColumnDefinitions>
-                                <Border BorderBrush="{ThemeResource NexusBorderSecondaryBrush}" BorderThickness="1" Padding="4,2" HorizontalAlignment="Left">
-                                    <TextBlock Text="U001" Style="{ThemeResource NexusLabelMonoStyle}"/>
-                                </Border>
-                                <TextBlock Grid.Column="1" Text="Michael Chen" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="2" Text="m.chen@nexus.local" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="3" Text="ADMIN" Style="{ThemeResource NexusTableCellStyle}" Foreground="{ThemeResource NexusInfoBrush}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="DEC 01, 14:32" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
-                                    <Ellipse Width="6" Height="6" Fill="{ThemeResource NexusSuccessBrush}" VerticalAlignment="Center"/>
-                                    <TextBlock Text="ACTIVE" Style="{ThemeResource NexusStatusLabelStyle}" Foreground="{ThemeResource NexusSuccessBrush}"/>
-                                </StackPanel>
-                                <Button Grid.Column="6" Content="EDIT" Style="{ThemeResource NexusGhostButtonStyle}" HorizontalAlignment="Left"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- User 2 -->
-                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" MinWidth="55"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="130"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="85"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="100"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="70"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="60"/>
-                                </Grid.ColumnDefinitions>
-                                <Border BorderBrush="{ThemeResource NexusBorderSecondaryBrush}" BorderThickness="1" Padding="4,2" HorizontalAlignment="Left">
-                                    <TextBlock Text="U002" Style="{ThemeResource NexusLabelMonoStyle}"/>
-                                </Border>
-                                <TextBlock Grid.Column="1" Text="Sarah Johnson" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="2" Text="s.johnson@nexus.local" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="3" Text="SUPERVISOR" Style="{ThemeResource NexusTableCellStyle}" Foreground="{ThemeResource NexusWarningBrush}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="DEC 01, 12:15" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
-                                    <Ellipse Width="6" Height="6" Fill="{ThemeResource NexusSuccessBrush}" VerticalAlignment="Center"/>
-                                    <TextBlock Text="ACTIVE" Style="{ThemeResource NexusStatusLabelStyle}" Foreground="{ThemeResource NexusSuccessBrush}"/>
-                                </StackPanel>
-                                <Button Grid.Column="6" Content="EDIT" Style="{ThemeResource NexusGhostButtonStyle}" HorizontalAlignment="Left"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- User 3 -->
-                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" MinWidth="55"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="130"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="85"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="100"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="70"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="60"/>
-                                </Grid.ColumnDefinitions>
-                                <Border BorderBrush="{ThemeResource NexusBorderSecondaryBrush}" BorderThickness="1" Padding="4,2" HorizontalAlignment="Left">
-                                    <TextBlock Text="U003" Style="{ThemeResource NexusLabelMonoStyle}"/>
-                                </Border>
-                                <TextBlock Grid.Column="1" Text="Jose Martinez" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="2" Text="j.martinez@nexus.local" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="3" Text="TECHNICIAN" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="DEC 01, 14:28" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
-                                    <Ellipse Width="6" Height="6" Fill="{ThemeResource NexusSuccessBrush}" VerticalAlignment="Center"/>
-                                    <TextBlock Text="ACTIVE" Style="{ThemeResource NexusStatusLabelStyle}" Foreground="{ThemeResource NexusSuccessBrush}"/>
-                                </StackPanel>
-                                <Button Grid.Column="6" Content="EDIT" Style="{ThemeResource NexusGhostButtonStyle}" HorizontalAlignment="Left"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- User 4 -->
-                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" MinWidth="55"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="130"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="85"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="100"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="70"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="60"/>
-                                </Grid.ColumnDefinitions>
-                                <Border BorderBrush="{ThemeResource NexusBorderSecondaryBrush}" BorderThickness="1" Padding="4,2" HorizontalAlignment="Left">
-                                    <TextBlock Text="U004" Style="{ThemeResource NexusLabelMonoStyle}"/>
-                                </Border>
-                                <TextBlock Grid.Column="1" Text="Robert Thompson" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="2" Text="r.thompson@nexus.local" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="3" Text="TECHNICIAN" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="NOV 30, 18:45" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
-                                    <Ellipse Width="6" Height="6" Fill="{ThemeResource NexusTextTertiaryBrush}" VerticalAlignment="Center"/>
-                                    <TextBlock Text="INACTIVE" Style="{ThemeResource NexusStatusLabelStyle}"/>
-                                </StackPanel>
-                                <Button Grid.Column="6" Content="EDIT" Style="{ThemeResource NexusGhostButtonStyle}" HorizontalAlignment="Left"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- User 5 -->
-                        <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" MinWidth="55"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="130"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="85"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="100"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="70"/>
-                                    <ColumnDefinition Width="Auto" MinWidth="60"/>
-                                </Grid.ColumnDefinitions>
-                                <Border BorderBrush="{ThemeResource NexusBorderSecondaryBrush}" BorderThickness="1" Padding="4,2" HorizontalAlignment="Left">
-                                    <TextBlock Text="U005" Style="{ThemeResource NexusLabelMonoStyle}"/>
-                                </Border>
-                                <TextBlock Grid.Column="1" Text="Sun-Hee Kim" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="2" Text="s.kim@nexus.local" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="3" Text="OPERATOR" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="DEC 01, 10:22" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
-                                    <Ellipse Width="6" Height="6" Fill="{ThemeResource NexusSuccessBrush}" VerticalAlignment="Center"/>
-                                    <TextBlock Text="ACTIVE" Style="{ThemeResource NexusStatusLabelStyle}" Foreground="{ThemeResource NexusSuccessBrush}"/>
-                                </StackPanel>
-                                <Button Grid.Column="6" Content="EDIT" Style="{ThemeResource NexusGhostButtonStyle}" HorizontalAlignment="Left"/>
-                            </Grid>
-                        </Border>
+                        <mvux:FeedView Source="{Binding Users}">
+                            <mvux:FeedView.ValueTemplate>
+                                <DataTemplate>
+                                    <ItemsRepeater ItemsSource="{Binding Data}">
+                                        <ItemsRepeater.Layout>
+                                            <StackLayout Spacing="0"/>
+                                        </ItemsRepeater.Layout>
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate x:DataType="models:User">
+                                                <Border BorderBrush="{ThemeResource NexusBorderPrimaryBrush}" BorderThickness="0,1,0,0" Padding="0,10">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" MinWidth="55"/>
+                                                            <ColumnDefinition Width="*" MinWidth="100"/>
+                                                            <ColumnDefinition Width="*" MinWidth="130"/>
+                                                            <ColumnDefinition Width="Auto" MinWidth="85"/>
+                                                            <ColumnDefinition Width="Auto" MinWidth="100"/>
+                                                            <ColumnDefinition Width="Auto" MinWidth="70"/>
+                                                            <ColumnDefinition Width="Auto" MinWidth="60"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Border BorderBrush="{ThemeResource NexusBorderSecondaryBrush}" BorderThickness="1" Padding="4,2" HorizontalAlignment="Left">
+                                                            <TextBlock Text="{Binding Id}" Style="{ThemeResource NexusLabelMonoStyle}"/>
+                                                        </Border>
+                                                        <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Grid.Column="2" Text="{Binding Email}" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Grid.Column="3" Text="{Binding Role, Converter={StaticResource Upper}}" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
+                                                        <TextBlock Grid.Column="4" Text="{Binding LastAccess, Converter={StaticResource Date}, ConverterParameter='MMM dd, HH:mm'}" Style="{ThemeResource NexusTableCellStyle}" VerticalAlignment="Center"/>
+                                                        <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="4">
+                                                            <Ellipse Width="6" Height="6" Fill="{Binding Status, Converter={StaticResource UserStatusBrush}}" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding Status, Converter={StaticResource Upper}}" Style="{ThemeResource NexusStatusLabelStyle}" Foreground="{Binding Status, Converter={StaticResource UserStatusBrush}}"/>
+                                                        </StackPanel>
+                                                        <Button Grid.Column="6" Content="EDIT" Style="{ThemeResource NexusGhostButtonStyle}" HorizontalAlignment="Left"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+                                </DataTemplate>
+                            </mvux:FeedView.ValueTemplate>
+                            <mvux:FeedView.ProgressTemplate>
+                                <DataTemplate><ProgressRing IsActive="True" Width="24" Height="24" Margin="0,24" HorizontalAlignment="Center"/></DataTemplate>
+                            </mvux:FeedView.ProgressTemplate>
+                            <mvux:FeedView.NoneTemplate>
+                                <DataTemplate><TextBlock Text="No users" Style="{ThemeResource NexusTableCellStyle}" Margin="0,24" HorizontalAlignment="Center"/></DataTemplate>
+                            </mvux:FeedView.NoneTemplate>
+                        </mvux:FeedView>
                     </StackPanel>
                 </Grid>
             </Border>

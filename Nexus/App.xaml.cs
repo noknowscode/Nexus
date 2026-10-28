@@ -16,14 +16,19 @@ public partial class App : Application
     }
 
     protected Window? MainWindow { get; private set; }
-    protected IHost? Host { get; private set; }
+
+    /// <summary>The application host. Kept as a static accessor for any utility code that
+    /// might still need it; page-level service resolution now happens through the navigation
+    /// system via the ViewMap registrations below.</summary>
+    public static IHost? Host { get; private set; }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         try
         {
             var builder = this.CreateBuilder(args)
-            // Add navigation support for toolkit controls such as TabBar and NavigationView
+            // Region-based navigation for Toolkit controls (TabBar) — required so TabBarItem
+            // Region.Name entries resolve to the nested RouteMaps registered below.
             .UseToolkitNavigation()
             .Configure(host => host
 #if DEBUG
@@ -78,7 +83,11 @@ public partial class App : Application
                 {
                     services.AddSingleton<INexusService, MockNexusService>();
                 })
-                .UseNavigation(RegisterRoutes)
+                // ReactiveViewModelMappings.ViewModelMappings tells the navigation system how to
+                // pair each MVUX Model (e.g. OverviewModel) with its generated bindable proxy
+                // (OverviewViewModel) when a route resolves. Without this, the ViewMaps below
+                // would try to construct the Model directly and miss the proxy wiring.
+                .UseNavigation(ReactiveViewModelMappings.ViewModelMappings, RegisterRoutes)
             );
         MainWindow = builder.Window;
 
@@ -106,8 +115,43 @@ public partial class App : Application
         }
     }
 
+    // Routes:
+    //   ""           -> Shell (bootstrap ContentControl, no UI of its own)
+    //     "Main"     -> MainPage (chrome: header + tabs + footer + content region) [default]
+    //       "Overview"    -> OverviewPage [default]
+    //       "Production"  -> ProductionPage
+    //       "Analytics"   -> AnalyticsPage
+    //       "Maintenance" -> MaintenancePage
+    //       "Settings"    -> SettingsPage
     private static void RegisterRoutes(IViewRegistry views, IRouteRegistry routes)
     {
-        // Routes not used - manual navigation in Shell
+        views.Register(
+            // Shell is registered VM-only (no View pairing) per Uno.Extensions Navigation:
+            // pairing Shell with ShellModel would prevent the nested IsDefault route from
+            // firing on bootstrap, leaving the ShellContent empty.
+            new ViewMap(ViewModel: typeof(ShellModel)),
+            new ViewMap<MainPage, MainModel>(),
+            new ViewMap<OverviewPage, OverviewModel>(),
+            new ViewMap<ProductionPage, ProductionModel>(),
+            new ViewMap<AnalyticsPage, AnalyticsModel>(),
+            new ViewMap<MaintenancePage, MaintenanceModel>(),
+            new ViewMap<SettingsPage, SettingsModel>()
+        );
+
+        routes.Register(
+            new RouteMap("", View: views.FindByViewModel<ShellModel>(),
+                Nested:
+                [
+                    new RouteMap("Main", View: views.FindByViewModel<MainModel>(), IsDefault: true,
+                        Nested:
+                        [
+                            new RouteMap("Overview", View: views.FindByViewModel<OverviewModel>(), IsDefault: true),
+                            new RouteMap("Production", View: views.FindByViewModel<ProductionModel>()),
+                            new RouteMap("Analytics", View: views.FindByViewModel<AnalyticsModel>()),
+                            new RouteMap("Maintenance", View: views.FindByViewModel<MaintenanceModel>()),
+                            new RouteMap("Settings", View: views.FindByViewModel<SettingsModel>())
+                        ])
+                ])
+        );
     }
 }
