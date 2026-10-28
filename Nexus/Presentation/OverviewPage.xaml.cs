@@ -2,7 +2,7 @@ namespace Nexus.Presentation;
 
 public sealed partial class OverviewPage : Page
 {
-    public OverviewModel ViewModel { get; private set; } = new();
+    private bool _attached;
 
     public OverviewPage()
     {
@@ -10,20 +10,17 @@ public sealed partial class OverviewPage : Page
         this.Loaded += OnLoaded;
     }
 
-    private bool _hoverAttached;
-
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (!_hoverAttached)
+        // Visual-tree behavior only. The MVUX ViewModel is wired by the framework via the
+        // ViewMap<OverviewPage, OverviewModel> registration in App.xaml.cs; DataContext is
+        // the generated bindable proxy by the time this fires. Run once per page lifetime.
+        if (_attached)
         {
-            LineItemHoverBehavior.AttachToTree(this);
-            _hoverAttached = true;
+            return;
         }
-    }
 
-    public void ReplayChartAnimations()
-    {
-        ViewModel = new OverviewModel();
-        Bindings.Update();
+        LineItemHoverBehavior.AttachToTree(this);
+        _attached = true;
     }
 }

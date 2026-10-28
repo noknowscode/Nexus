@@ -9,14 +9,14 @@ public class MockNexusService : INexusService
     public ValueTask<DashboardMetrics> GetDashboardMetricsAsync(CancellationToken ct)
     {
         var metrics = new DashboardMetrics(
-            Throughput: 2847 + _random.Next(-50, 50),
-            ThroughputTrend: 12.5,
-            Efficiency: 94.2 + (_random.NextDouble() - 0.5),
-            EfficiencyTrend: 3.1,
-            Uptime: 99.7 + (_random.NextDouble() * 0.2 - 0.1),
-            UptimeTrend: 0.2,
-            EnergyConsumption: 1247 + _random.Next(-20, 20),
-            EnergyTrend: -8.3
+            Throughput: 847.2 + (_random.NextDouble() - 0.5) * 4,
+            ThroughputTrend: 2.4,
+            Efficiency: 94.7 + (_random.NextDouble() - 0.5),
+            EfficiencyTrend: 0.8,
+            Uptime: 99.2 + (_random.NextDouble() * 0.2 - 0.1),
+            UptimeTrend: -0.1,
+            EnergyConsumption: 1.24 + (_random.NextDouble() - 0.5) * 0.04,
+            EnergyTrend: -3.2
         );
         return ValueTask.FromResult(metrics);
     }

@@ -9,14 +9,16 @@
     <!-- Theme-aware NEXUS Colors and Brushes -->
     <ResourceDictionary.ThemeDictionaries>
 
-        <!-- Dark Theme -->
-        <ResourceDictionary x:Key="Dark">
-            <Color x:Key="NexusBackgroundPrimaryColor">#0a0a0b</Color>
-            <Color x:Key="NexusBackgroundSecondaryColor">#111113</Color>
-            <Color x:Key="NexusBackgroundTertiaryColor">#18181b</Color>
+        <!-- Dark Theme. Keyed "Default" (not "Dark") so ThemeResource lookups in Style
+             setters (Background/BorderBrush on panels, buttons, inputs) resolve correctly;
+             WinUI maps the Dark app theme to the "Default" theme dictionary. -->
+        <ResourceDictionary x:Key="Default">
+            <Color x:Key="NexusBackgroundPrimaryColor">#060607</Color>
+            <Color x:Key="NexusBackgroundSecondaryColor">#1a1a1f</Color>
+            <Color x:Key="NexusBackgroundTertiaryColor">#222227</Color>
 
-            <Color x:Key="NexusBorderPrimaryColor">#27272a</Color>
-            <Color x:Key="NexusBorderSecondaryColor">#3f3f46</Color>
+            <Color x:Key="NexusBorderPrimaryColor">#2e2e34</Color>
+            <Color x:Key="NexusBorderSecondaryColor">#47474f</Color>
 
             <Color x:Key="NexusTextPrimaryColor">#fafafa</Color>
             <Color x:Key="NexusTextSecondaryColor">#a1a1aa</Color>
@@ -28,13 +30,13 @@
             <Color x:Key="NexusInfoColor">#60a5fa</Color>
             <Color x:Key="NexusAccentColor">#52525b</Color>
 
-            <SolidColorBrush x:Key="NexusBackgroundPrimaryBrush" Color="#0a0a0b"/>
-            <SolidColorBrush x:Key="NexusBackgroundSecondaryBrush" Color="#111113"/>
-            <SolidColorBrush x:Key="NexusBackgroundTertiaryBrush" Color="#18181b"/>
+            <SolidColorBrush x:Key="NexusBackgroundPrimaryBrush" Color="#060607"/>
+            <SolidColorBrush x:Key="NexusBackgroundSecondaryBrush" Color="#1a1a1f"/>
+            <SolidColorBrush x:Key="NexusBackgroundTertiaryBrush" Color="#222227"/>
 
-            <SolidColorBrush x:Key="NexusBorderPrimaryBrush" Color="#27272a"/>
-            <SolidColorBrush x:Key="NexusBorderSecondaryBrush" Color="#3f3f46"/>
-            <SolidColorBrush x:Key="NexusBorderBrush" Color="#27272a"/>
+            <SolidColorBrush x:Key="NexusBorderPrimaryBrush" Color="#2e2e34"/>
+            <SolidColorBrush x:Key="NexusBorderSecondaryBrush" Color="#47474f"/>
+            <SolidColorBrush x:Key="NexusBorderBrush" Color="#2e2e34"/>
 
             <SolidColorBrush x:Key="NexusTextPrimaryBrush" Color="#fafafa"/>
             <SolidColorBrush x:Key="NexusTextSecondaryBrush" Color="#a1a1aa"/>
@@ -45,6 +47,46 @@
             <SolidColorBrush x:Key="NexusDangerBrush" Color="#f87171"/>
             <SolidColorBrush x:Key="NexusInfoBrush" Color="#60a5fa"/>
             <SolidColorBrush x:Key="NexusAccentBrush" Color="#52525b"/>
+
+            <!-- TabBarItem lightweight-styling overrides: flat (no Material selection pill),
+                 text tertiary -> secondary (hover) -> primary (selected) per the brief. -->
+            <SolidColorBrush x:Key="TabBarItemBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundSelected" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundSelectedPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundSelectedPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemForeground" Color="#71717a"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundPointerOver" Color="#a1a1aa"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundPressed" Color="#fafafa"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundSelected" Color="#fafafa"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundSelectedPointerOver" Color="#fafafa"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundSelectedPressed" Color="#fafafa"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundDisabled" Color="#52525b"/>
+
+            <!-- Material Navigation TabBarItem (the implicit style): kill the accent
+                 "active indicator" pill + tinted backgrounds, set flat brief text colors. -->
+            <SolidColorBrush x:Key="NavigationTabBarBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundSelected" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundSelectedPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundSelectedPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundSelected" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundSelectedPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundSelectedPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundDisabled" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemPointerFillBrush" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarForeground" Color="#71717a"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundPointerOver" Color="#a1a1aa"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundPressed" Color="#fafafa"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundSelected" Color="#fafafa"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundSelectedPointerOver" Color="#fafafa"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundSelectedPressed" Color="#fafafa"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundDisabled" Color="#52525b"/>
         </ResourceDictionary>
 
         <!-- Light Theme -->
@@ -83,9 +125,54 @@
             <SolidColorBrush x:Key="NexusDangerBrush" Color="#dc2626"/>
             <SolidColorBrush x:Key="NexusInfoBrush" Color="#2563eb"/>
             <SolidColorBrush x:Key="NexusAccentBrush" Color="#a1a1aa"/>
+
+            <!-- TabBarItem lightweight-styling overrides (light theme) -->
+            <SolidColorBrush x:Key="TabBarItemBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundSelected" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundSelectedPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemBackgroundSelectedPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="TabBarItemForeground" Color="#71717a"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundPointerOver" Color="#52525b"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundPressed" Color="#18181b"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundSelected" Color="#18181b"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundSelectedPointerOver" Color="#18181b"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundSelectedPressed" Color="#18181b"/>
+            <SolidColorBrush x:Key="TabBarItemForegroundDisabled" Color="#a1a1aa"/>
+
+            <!-- Material Navigation TabBarItem (light theme) -->
+            <SolidColorBrush x:Key="NavigationTabBarBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundSelected" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundSelectedPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarBackgroundSelectedPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundSelected" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundSelectedPointerOver" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundSelectedPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemActiveIndicatorBackgroundDisabled" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarItemPointerFillBrush" Color="Transparent"/>
+            <SolidColorBrush x:Key="NavigationTabBarForeground" Color="#71717a"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundPointerOver" Color="#52525b"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundPressed" Color="#18181b"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundSelected" Color="#18181b"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundSelectedPointerOver" Color="#18181b"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundSelectedPressed" Color="#18181b"/>
+            <SolidColorBrush x:Key="NavigationTabBarForegroundDisabled" Color="#a1a1aa"/>
         </ResourceDictionary>
 
     </ResourceDictionary.ThemeDictionaries>
+
+    <!-- ============================================ -->
+    <!-- Typography Fonts (bundled, OFL licensed)     -->
+    <!-- Display = Space Grotesk, System/UI = IBM Plex Mono -->
+    <!-- ============================================ -->
+    <FontFamily x:Key="NexusDisplayFont">ms-appx:///Assets/Fonts/SpaceGrotesk.ttf#Space Grotesk</FontFamily>
+    <FontFamily x:Key="NexusMonoFont">ms-appx:///Assets/Fonts/IBMPlexMono-Regular.ttf#IBM Plex Mono</FontFamily>
 
     <!-- Spacing Constants -->
     <x:Double x:Key="NexusSpaceXS">4</x:Double>
@@ -103,7 +190,7 @@
     <!-- Typography Styles -->
     <!-- Logo Style -->
     <Style x:Key="NexusLogoStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusDisplayFont}"/>
         <Setter Property="FontWeight" Value="Light"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="CharacterSpacing" Value="400"/>
@@ -112,7 +199,7 @@
 
     <!-- Display Values (32px for large metrics) -->
     <Style x:Key="NexusDisplayStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusDisplayFont}"/>
         <Setter Property="FontWeight" Value="Light"/>
         <Setter Property="FontSize" Value="32"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusTextPrimaryBrush}"/>
@@ -120,7 +207,7 @@
 
     <!-- Medium Display (24px) -->
     <Style x:Key="NexusDisplayMediumStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusDisplayFont}"/>
         <Setter Property="FontWeight" Value="Light"/>
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusTextPrimaryBrush}"/>
@@ -128,7 +215,7 @@
 
     <!-- Body Style -->
     <Style x:Key="NexusBodyStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="CharacterSpacing" Value="25"/>
@@ -137,7 +224,7 @@
 
     <!-- Body Mono Style (11px) -->
     <Style x:Key="NexusBodyMonoStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="CharacterSpacing" Value="50"/>
@@ -146,7 +233,7 @@
 
     <!-- Label Mono Style (10px) -->
     <Style x:Key="NexusLabelMonoStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="10"/>
         <Setter Property="CharacterSpacing" Value="50"/>
@@ -155,7 +242,7 @@
 
     <!-- Caption Style (12px) -->
     <Style x:Key="NexusCaptionStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusTextSecondaryBrush}"/>
@@ -163,7 +250,7 @@
 
     <!-- Caption Mono Style (9px) -->
     <Style x:Key="NexusCaptionMonoStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Light"/>
         <Setter Property="FontSize" Value="9"/>
         <Setter Property="CharacterSpacing" Value="50"/>
@@ -172,7 +259,7 @@
 
     <!-- Panel Title Style -->
     <Style x:Key="NexusPanelTitleStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="10"/>
         <Setter Property="CharacterSpacing" Value="150"/>
@@ -181,7 +268,7 @@
 
     <!-- Status Label Style (uppercase) -->
     <Style x:Key="NexusStatusLabelStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="9"/>
         <Setter Property="CharacterSpacing" Value="100"/>
@@ -190,7 +277,7 @@
 
     <!-- Tab Item Style -->
     <Style x:Key="NexusTabTextStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="10"/>
         <Setter Property="CharacterSpacing" Value="150"/>
@@ -199,7 +286,7 @@
 
     <!-- Value Style (for metric values) -->
     <Style x:Key="NexusValueStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusDisplayFont}"/>
         <Setter Property="FontWeight" Value="Light"/>
         <Setter Property="FontSize" Value="28"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusTextPrimaryBrush}"/>
@@ -207,7 +294,7 @@
 
     <!-- Unit Style -->
     <Style x:Key="NexusUnitStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="10"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusTextTertiaryBrush}"/>
@@ -219,7 +306,7 @@
         <Setter Property="BorderBrush" Value="{ThemeResource NexusBorderSecondaryBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusTextSecondaryBrush}"/>
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontSize" Value="9"/>
         <Setter Property="CharacterSpacing" Value="100"/>
         <Setter Property="Padding" Value="12,6"/>
@@ -234,17 +321,18 @@
         <Setter Property="BorderBrush" Value="{ThemeResource NexusSuccessBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusBackgroundPrimaryBrush}"/>
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontSize" Value="9"/>
         <Setter Property="CharacterSpacing" Value="100"/>
         <Setter Property="Padding" Value="12,6"/>
         <Setter Property="MinHeight" Value="28"/>
     </Style>
 
-    <!-- Panel Border Style -->
+    <!-- Panel Border Style. Border uses border-secondary so cards read clearly against the
+         near-black page (border-primary at 1px is imperceptible on this background). -->
     <Style x:Key="NexusPanelBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="{ThemeResource NexusBackgroundSecondaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource NexusBorderPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource NexusBorderSecondaryBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="0"/>
     </Style>
@@ -252,14 +340,14 @@
     <!-- Card Border Style -->
     <Style x:Key="NexusCardBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="{ThemeResource NexusBackgroundSecondaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource NexusBorderPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource NexusBorderSecondaryBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="16"/>
     </Style>
 
     <!-- Table Header Style -->
     <Style x:Key="NexusTableHeaderStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="9"/>
         <Setter Property="CharacterSpacing" Value="100"/>
@@ -268,7 +356,7 @@
 
     <!-- Table Cell Style -->
     <Style x:Key="NexusTableCellStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="CharacterSpacing" Value="25"/>
@@ -291,7 +379,7 @@
         <Setter Property="BorderBrush" Value="{ThemeResource NexusBorderPrimaryBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusTextPrimaryBrush}"/>
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="Padding" Value="8,6"/>
     </Style>
@@ -302,7 +390,7 @@
         <Setter Property="BorderBrush" Value="{ThemeResource NexusBorderPrimaryBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{ThemeResource NexusTextSecondaryBrush}"/>
-        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontFamily" Value="{StaticResource NexusMonoFont}"/>
         <Setter Property="FontSize" Value="11"/>
     </Style>
 

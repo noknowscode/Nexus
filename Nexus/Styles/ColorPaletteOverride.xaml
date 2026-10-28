@@ -4,8 +4,8 @@
     <!-- NEXUS Industrial Theme - Material Color System -->
     <ResourceDictionary.ThemeDictionaries>
 
-        <!-- Dark Theme (Primary) -->
-        <ResourceDictionary x:Key="Dark">
+        <!-- Dark Theme (Primary). Keyed "Default" so ThemeResource resolves in Style setters. -->
+        <ResourceDictionary x:Key="Default">
             <Color x:Key="PrimaryColor">#4ade80</Color>
             <Color x:Key="OnPrimaryColor">#0a0a0b</Color>
             <Color x:Key="PrimaryContainerColor">#18181b</Color>

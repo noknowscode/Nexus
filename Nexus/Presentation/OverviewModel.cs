@@ -1,67 +1,63 @@
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using System.Linq;
+using Windows.Foundation;
+using Microsoft.UI.Xaml.Media;
+using Nexus.Services;
+using Uno.Extensions.Reactive;
 
 namespace Nexus.Presentation;
 
-public partial record OverviewModel
+/// <summary>
+/// MVUX model for the Overview dashboard. Async data is exposed as feeds sourced from
+/// <see cref="INexusService"/>; the generated <c>OverviewViewModel</c> bridges them to XAML.
+/// </summary>
+public partial record OverviewModel(INexusService Nexus)
 {
-    private static readonly SKColor SuccessColor = SKColor.Parse("#4ade80");
-    private static readonly SKColor InfoColor = SKColor.Parse("#60a5fa");
-    private static readonly SKColor WarningColor = SKColor.Parse("#fbbf24");
-    private static readonly SKColor DangerColor = SKColor.Parse("#f87171");
+    // Single read-only record -> IFeed; surfaced through a FeedView (loading/error/value).
+    public IFeed<DashboardMetrics> Metrics => Feed.Async(Nexus.GetDashboardMetricsAsync);
 
-    public ISeries[] ThroughputSeries { get; } = CreateSparklineSeries(
-        [780, 810, 795, 820, 835, 850, 830, 847],
-        SuccessColor);
+    // Read-only collections -> IListFeed; surfaced through FeedView + ItemsRepeater.
+    public IListFeed<ProductionLine> ProductionLines => ListFeed.Async(Nexus.GetProductionLinesAsync);
 
-    public ISeries[] EfficiencySeries { get; } = CreateSparklineSeries(
-        [92.1, 93.5, 93.8, 94.2, 94.0, 94.5, 94.3, 94.7],
-        SuccessColor);
+    public IListFeed<Alert> RecentAlerts => ListFeed.Async(ct => Nexus.GetRecentAlertsAsync(ct));
 
-    public ISeries[] UptimeSeries { get; } = CreateSparklineSeries(
-        [99.8, 99.5, 99.6, 99.4, 99.3, 99.5, 99.1, 99.2],
-        InfoColor);
+    // --- KPI card sparklines ---
+    // Rendered as native Polyline (line) + Polygon (area) inside a Viewbox. This draws reliably at
+    // any card width; LiveCharts' CartesianChart only rendered the sparkline at large sizes.
+    // Points are normalized to a 200 x 44 box with y inverted, bound to the shapes' Points.
+    public PointCollection ThroughputLine { get; } = SparkLine([780, 810, 795, 820, 835, 850, 830, 847]);
+    public PointCollection ThroughputArea { get; } = SparkArea([780, 810, 795, 820, 835, 850, 830, 847]);
+    public PointCollection EfficiencyLine { get; } = SparkLine([92.1, 93.5, 93.8, 94.2, 94.0, 94.5, 94.3, 94.7]);
+    public PointCollection EfficiencyArea { get; } = SparkArea([92.1, 93.5, 93.8, 94.2, 94.0, 94.5, 94.3, 94.7]);
+    public PointCollection UptimeLine { get; } = SparkLine([99.8, 99.5, 99.6, 99.4, 99.3, 99.5, 99.1, 99.2]);
+    public PointCollection UptimeArea { get; } = SparkArea([99.8, 99.5, 99.6, 99.4, 99.3, 99.5, 99.1, 99.2]);
+    public PointCollection EnergyLine { get; } = SparkLine([1.35, 1.32, 1.30, 1.28, 1.26, 1.25, 1.24, 1.24]);
+    public PointCollection EnergyArea { get; } = SparkArea([1.35, 1.32, 1.30, 1.28, 1.26, 1.25, 1.24, 1.24]);
 
-    public ISeries[] EnergySeries { get; } = CreateSparklineSeries(
-        [1.35, 1.32, 1.30, 1.28, 1.26, 1.25, 1.24, 1.24],
-        SuccessColor);
+    private const double SparkW = 200, SparkH = 44, SparkPad = 6;
 
-    public Axis[] SparklineXAxis { get; } =
-    [
-        new Axis
-        {
-            IsVisible = false,
-            ShowSeparatorLines = false,
-            Padding = new LiveChartsCore.Drawing.Padding(0)
-        }
-    ];
-
-    public Axis[] SparklineYAxis { get; } =
-    [
-        new Axis
-        {
-            IsVisible = false,
-            ShowSeparatorLines = false,
-            Padding = new LiveChartsCore.Drawing.Padding(0)
-        }
-    ];
-
-    private static ISeries[] CreateSparklineSeries(double[] values, SKColor color)
+    private static PointCollection SparkLine(double[] values)
     {
-        return
-        [
-            new LineSeries<double>
-            {
-                Values = values,
-                Fill = new SolidColorPaint(color.WithAlpha(30)),
-                Stroke = new SolidColorPaint(color, 2),
-                GeometryFill = null,
-                GeometryStroke = null,
-                GeometrySize = 0,
-                LineSmoothness = 0.5
-            }
-        ];
+        var points = new PointCollection();
+        double min = values.Min(), max = values.Max();
+        double range = max - min;
+        if (range < 1e-9) range = 1;
+
+        for (int i = 0; i < values.Length; i++)
+        {
+            double x = values.Length == 1 ? 0 : i * (SparkW / (values.Length - 1));
+            double y = SparkH - SparkPad - (values[i] - min) / range * (SparkH - 2 * SparkPad);
+            points.Add(new Point(x, y));
+        }
+
+        return points;
+    }
+
+    private static PointCollection SparkArea(double[] values)
+    {
+        var points = SparkLine(values);
+        // Close the shape down to the baseline so it reads as a filled area.
+        points.Add(new Point(SparkW, SparkH));
+        points.Add(new Point(0, SparkH));
+        return points;
     }
 }
