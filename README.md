@@ -1,3 +1,5 @@
+> **Moved to uno-lab.** This project now lives in the `Nexus/` folder of [noknowscode/uno-lab](https://github.com/noknowscode/uno-lab/tree/main/Nexus) (private). This repository is archived and kept for its history.
+
 # 🏭 Nexus — *Industrial Control System*
 
 > An industrial-SCADA-style monitoring dashboard: production lines, maintenance, alerts, KPIs — dark / light theme aware.
